@@ -1,21 +1,13 @@
 const express = require('express')
-const cors = require('cors')
-const path = require ('path')
-const dotenv = require ('dotenv')
-const MongoClient = require('mongodb').MongoClient;
+const mongodb = require('mongodb')
 
-dotenv.config({
-    path: './.env',
-});
+const app = express()
 
-const PORT = process.env.PORT || 5050;
 
-// Connection to MongoDB
-const uri = process.env.MONGO_URI;
+const PORT = process.env.PORT || 5050
 
-MongoClient.connect(url)
-.then (client => {
-    console.log("connectend to MongoDB");
+app.get('/testRoute', (req, res) => res.end('Hello from Server!'))
 
-    app.listen(PORT, () => console.log("Server is listening no port"))
+app.listen(PORT, () => {
+  console.log(`Node.js App running on port ${PORT}...`)
 })

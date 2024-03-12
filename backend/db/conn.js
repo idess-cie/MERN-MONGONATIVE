@@ -2,23 +2,9 @@ const { MongoClient } = require('mongodb');
 
 const Db = 'mongodb+srv://mariamedina:mcm_030102@test.avqcs9x.mongodb.net/?retryWrites=true&w=majority&appName=Test';
 
-const client = new MongoClient(Db, {
-});
+const client = new MongoClient(Db);
 
 var _db;
-function errorConnectToServer(callback) {
-  client.connect(function (err, db) {
-    //console.log(db);
-    // Verify we got a good "db" object
-    if (db) {
-      _db = db.db("student-profile");
-    }
-    else {
-      errorConnectToServer(callback)
-    }
-    return callback(err);
-  });
-}
 module.exports = {
   connectToServer: function (callback) {
     client.connect(function (err, db) {
@@ -34,7 +20,7 @@ module.exports = {
   getDb: function () {
     return _db;
   },
-  getotherDB: async function (db_name) {
+  getotherDB: async function (Db) {
 
     return new Promise((callback) => {
       client.connect((err) => {

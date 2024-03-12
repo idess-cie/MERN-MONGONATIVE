@@ -1,50 +1,52 @@
-import { MongoClient } from "mongodb";
-const Db = process.env.ATLAS_URI;
-const app_env = process.env.REACT_APP_ENV;
+const { MongoClient } = require('mongodb');
+
+const Db = 'mongodb+srv://mariamedina:mcm_030102@test.avqcs9x.mongodb.net/?retryWrites=true&w=majority&appName=Test';
 
 const client = new MongoClient(Db, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
 });
 
 var _db;
-function errorConnectToServer (callback) {
-  client.connect(function (err, db) {
-    //console.log(db);
-    // Verify we got a good "db" object
-    if (db) {
-       _db = db.db("MERN-Training"); 
-    }
-    else{
-      errorConnectToServer(callback)
-    }
-    return callback(err);
-  });
-}
-export function connectToServer(callback) {
+function errorConnectToServer(callback) {
   client.connect(function (err, db) {
     //console.log(db);
     // Verify we got a good "db" object
     if (db) {
       _db = db.db("student-profile");
     }
+    else {
+      errorConnectToServer(callback)
+    }
     return callback(err);
   });
 }
-export function getDb() {
-  return _db;
-}
-export async function getotherDB(db_name) {
-
-  return new Promise((callback) => {
+module.exports = {
+  connectToServer: function (callback) {
     client.connect(function (err, db) {
       //console.log(db);
       // Verify we got a good "db" object
       if (db) {
-        var other_db = db.db(db_name);
-        callback(other_db);
+        _db = db.db("student-profile");
       }
-      callback(false);
+      return callback(err);
     });
-  });
-}
+  },
+
+  getDb: function () {
+    return _db;
+  },
+  getotherDB: async function (db_name) {
+
+    return new Promise((callback) => {
+      client.connect((err) => {
+        if (err) {
+          console.error('Error connecting to MongoDB:', err);
+          return;
+        }
+        console.log('Connected to MongoDB');
+      
+        // If connection successful, close the client
+        client.close();
+      });
+    });
+  }
+};

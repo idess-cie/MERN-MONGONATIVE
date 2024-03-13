@@ -1,15 +1,25 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const mongodb = require('mongodb')
-const db = require('./db/conn')
+const express = require("express");
+const db = require("./db/conn");
 
-const app = express()
+const app = express();
+
+const PORT = process.env.PORT || 5050;
+
+// middleware
+app.use(express.json())
 
 
-const PORT = process.env.PORT || 5050
+// route
+const ProfileRoutes = require('./router/profileRoutes')
+app.use('/api/profile', ProfileRoutes)
 
-app.get('/', (req, res) => res.end('Hello from Server!'))
+
 
 app.listen(PORT, () => {
-  console.log(`Node.js App running on port ${PORT}...`)
-})
+  db.connectToMongoDB(function (err) {
+    if (err) console.error(err);
+    else {
+      console.log(`Server is running on port: ${PORT}`);
+    }
+  });
+});

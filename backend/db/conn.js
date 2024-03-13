@@ -1,38 +1,32 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient } = require("mongodb");
 
-const Db = 'mongodb+srv://mariamedina:mcm_030102@test.avqcs9x.mongodb.net/?retryWrites=true&w=majority&appName=Test';
+const uri ="mongodb+srv://mariamedina:mcm_030102@test.avqcs9x.mongodb.net/?retryWrites=true&w=majority&appName=Test";
 
-const client = new MongoClient(Db);
+const dbName = "student-profile";
 
-var _db;
-module.exports = {
-  connectToServer: function (callback) {
-    client.connect(function (err, db) {
-      //console.log(db);
-      // Verify we got a good "db" object
-      if (db) {
-        _db = db.db("student-profile");
-      }
-      return callback(err);
-    });
-  },
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-  getDb: function () {
-    return _db;
-  },
-  getotherDB: async function (Db) {
 
-    return new Promise((callback) => {
-      client.connect((err) => {
-        if (err) {
-          console.error('Error connecting to MongoDB:', err);
-          return;
-        }
-        console.log('Connected to MongoDB');
-      
-        // If connection successful, close the client
-        client.close();
-      });
-    });
+
+async function connectToMongoDB() {
+  try {
+    await client.connect();
+
+    console.log("Connected successfully to MongoDB server");
+
+    const db = client.db(dbName);
+
+    // List collections in the database
+    const collections = await db.listCollections().toArray();
+    console.log("Collections:", collections.map((collection) => collection.name));
+    
+    // No need to close the client here
+  } catch (err) {
+    console.error("Error connecting to MongoDB:", err);
   }
-};
+}
+
+
+module.exports = {
+  connectToMongoDB
+}

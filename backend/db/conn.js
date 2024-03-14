@@ -7,23 +7,14 @@ const dbName = "student-profile";
 const client = new MongoClient(uri);
 
 async function connectToMongoDB() {
-    try {
-        await client.connect();
-
-        console.log("Connected successfully to MongoDB server");
-
-        const db = client.db(dbName);
-
-        // i list lang ang laman ng DB student profile
-        const collections = await db.listCollections().toArray();
-        console.log("Collections:", collections.map(collection => collection.name));
-        //end comment
-
-    } catch (err) {
-        console.error("Error connecting to MongoDB:", err);
-    } finally {
-        await client.close();
-    }
+  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  try {
+    await client.connect();
+    console.log('Connected to the database');
+    return client.db(dbName);
+  } catch (error) {
+    console.error('Error connecting to the database:', error);
+    throw error;
+  }
 }
-
-connectToMongoDB();
+module.exports = connectToMongoDB;

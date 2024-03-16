@@ -7,7 +7,7 @@ const dbName = "student-profile";
 const client = new MongoClient(uri);
 
 async function connectToMongoDB() {
-  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  const client = new MongoClient(uri);
   try {
     await client.connect();
     console.log('Connected to the database');

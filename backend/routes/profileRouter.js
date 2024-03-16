@@ -42,6 +42,7 @@ router.post("/", async (req, res) => {
       name: req.body.name,
       house: req.body.house,
       bloodline: req.body.bloodline,
+      specialty: [req.body.specialty]
     };
     const result = await collection.insertOne(newProfile);
     res.status(204).send(result);
@@ -63,6 +64,7 @@ router.patch("/:id", async (req, res) => {
         name: req.body.name,
         house: req.body.house,
         bloodline: req.body.bloodline,
+        specialty: [req.body.specialty]
       },
     };
 
